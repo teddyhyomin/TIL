@@ -7,3 +7,8 @@
 * Question
 * Answer
 * Description
+
+
+## resolution
+
+* time complexity
