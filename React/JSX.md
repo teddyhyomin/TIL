@@ -71,7 +71,61 @@ export default App;
 ```js
 function App() {
   const name = "Hello";
-  return <div>{name === "Hello" && <h1> it is Hello. </h1>}</div>;
+  return (
+    <div>
+    {name === "Hello" && <h1> it is Hello. </h1>}
+    </div>;
+    )
 }
 export default App;
+```
+
+### Protect undefined value error
+
+```js
+function App() {
+  const name = undefined;
+  return <div> {name || "the value is undefined."} </div>;
+}
+
+export default App;
+```
+
+### Inline Styleing AKA CamelCase
+
+```js
+function App() {
+  const name = "Hello";
+  const stylehere = {
+    backgroundColor: "black",
+    color: "aqua",
+    fontSize: "48px",
+    fontWeight: "bold",
+    pedding: 16,
+  };
+  return <div style={stylehere}> {name} </div>;
+}
+```
+
+### JSX need to use className instead of class
+
+```css
+// src/App.css
+
+.helloworld {
+  background: aqua;
+  color: black;
+  font-size: 48px;
+  font-weight: bold;
+  padding: 16px;
+}
+```
+
+```js
+import "./App.css";
+
+function App() {
+  const yourcontent = "Hello World !!!";
+  return <div className="helloworld"> {yourcontent} </div>;
+}
 ```
