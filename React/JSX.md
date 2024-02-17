@@ -3,7 +3,9 @@
 ### Dom tree structure essential
 
 - use div : make a group
-- or
+
+#### or
+
 - use Fragment ==> Since React V16
 
 ```js
@@ -46,6 +48,30 @@ function App() {
 export default App;
 ```
 
-- Props:
+### Ternary Operator
 
-- 단방향 데이터 바인딩 : 부모 -> 자식 컴포넌트만 데이터 전달 가능함 (자식 -> 부모 전달 못함)
+```js
+function App() {
+  const name = "password";
+  return (
+    <div>
+      {name === "password" ? (
+        <h1> it is password. </h1>
+      ) : (
+        <h2> it is NOT password. </h2>
+      )}
+    </div>
+  );
+}
+export default App;
+```
+
+### Conditional Expressions
+
+```js
+function App() {
+  const name = "Hello";
+  return <div>{name === "Hello" && <h1> it is Hello. </h1>}</div>;
+}
+export default App;
+```
