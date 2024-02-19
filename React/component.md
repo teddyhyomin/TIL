@@ -151,14 +151,30 @@ export default Mycomponent;
 ### class component with props
 
 ```js
-
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Component } from "react";
+import PropTypes from "prop-types";
 
 class MyComponent extends Component {
-    render() {
-        const {name, }
-
-    }
+  render() {
+    const { name, favoriteNumber, children } = this.props;
+    return (
+      <div>
+        Hello, My name is {name}. <br />
+        children value is {children}. <br />
+        My favorite number is {favoriteNumber}.
+      </div>
+    );
+  }
 }
+
+MyComponent.defalutProps = {
+  name: "defalut name",
+};
+
+MyComponent.propTypes = {
+  name: PropTypes.string,
+  favoriteNumber: PropTypes.number.isRequired,
+};
+
+export default MyComponent;
 ```
