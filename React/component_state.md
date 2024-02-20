@@ -68,3 +68,39 @@ class Counter extends Component {
 
 export default Counter;
 ```
+
+### function component ==> useState
+
+```js
+import { useState } from "react";
+
+const Say = () => {
+  const [message, setMessage] = useState("");
+  const onClickEnter = () => setMessage("Hello!");
+  const onClickLeave = () => setMessage("Bye!");
+
+  const [color, setColor] = useState("black");
+
+  return (
+    <div>
+      <button onClick={onClickEnter}> enter </button>
+      <button onClick={onClickLeave}> out </button>
+      <h1 style={{ color }}> {message} </h1>
+      <button style={{ color: "red" }} onClick={() => setColor("red")}>
+        {" "}
+        Red color{" "}
+      </button>
+      <button style={{ color: "green" }} onClick={() => setColor("green")}>
+        {" "}
+        Green color{" "}
+      </button>
+      <button style={{ color: "blue" }} onClick={() => setColor("blue")}>
+        {" "}
+        Blue color{" "}
+      </button>
+    </div>
+  );
+};
+
+export default Say;
+```
