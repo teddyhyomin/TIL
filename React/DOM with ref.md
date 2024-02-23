@@ -109,3 +109,64 @@ class ValidationSample extends Component {
 
 export default ValidationSample;
 ```
+
+### Dom with ref
+
+```js
+import { Component } from "react";
+
+class ScrollBox extends Component {
+  scrollToBottom = () => {
+    const { scrollHight, clientHeight } = this.box;
+    this.box.scrollTop = scrollHight - clientHeight;
+  };
+  render() {
+    const style = {
+      border: "1px solid black",
+      height: "300px",
+      width: "300px",
+      overflow: "auto",
+      position: "relative",
+    };
+
+    const innerStyle = {
+      width: "100%",
+      height: "650px",
+      background: "linear-gradient(white, black)",
+    };
+
+    return (
+      <div
+        style={style}
+        ref={(ref) => {
+          this.box = ref;
+        }}
+      >
+        <div style={innerStyle} />
+      </div>
+    );
+  }
+}
+
+export default ScrollBox;
+```
+
+```js
+import { Component } from "react";
+import ScrollBox from "./ScrollBox";
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <ScrollBox ref={(ref) => (this.scrollBox = ref)} />
+        <button onClick={() => this.scrollBox.scrollToBottom()}>
+          Go to Top!
+        </button>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
