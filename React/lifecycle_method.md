@@ -1,6 +1,6 @@
 ## lifecycle method
 
-### without error catch
+### How to use lifecycle method
 
 ```js
 import { Component } from "react";
@@ -108,6 +108,67 @@ class App extends Component {
       <div>
         <button onClick={this.handleClick}> random color </button>
         <LifeCycleSample color={this.state.color} />
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+- if you need to add error catch method
+
+```js
+import { Component } from "react";
+
+class ErrorBoundary extends Component {
+  state = {
+    error: false,
+  };
+  componentDidCatch(error, info) {
+    this.setState({
+      error: true,
+    });
+    console.log({ error, info });
+  }
+  render() {
+    if (this.state.error) return <div> error occured! </div>;
+    return this.props.children;
+  }
+}
+
+export default ErrorBoundary;
+```
+
+- add on ErrorBoundary class and apply on the app.js
+
+```js
+import { Component } from "react";
+import LifeCycleSample from "./LifeCycleSample";
+import ErrorBoundary from "./ErrorBoundary";
+
+function getRandomColor() {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+}
+
+class App extends Component {
+  state = {
+    color: "#000000",
+  };
+
+  handeClick = () => {
+    this.setState({
+      color: getRandomColor(),
+    });
+  };
+
+  render() {
+    return (
+      <div>
+        <button onClick={this.handeClick}> Random Color </button>
+        <ErrorBoundary>
+          <LifeCycleSample color={this.state.color} />
+        </ErrorBoundary>
       </div>
     );
   }
