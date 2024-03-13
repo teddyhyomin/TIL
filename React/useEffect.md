@@ -60,3 +60,45 @@ export default Info;
 ```
 
 ### useEffect with cleanup
+
+```js
+import { useState } from "react";
+
+const Counter = () => {
+  const [value, setValue] = useState(0);
+
+  return (
+    <div>
+      <p>
+        current counter value is <b> {value} </b>.
+      </p>
+      <button onClick={() => setValue(value + 1)}> +1 </button>
+      <button onClick={() => setValue(value - 1)}> -1 </button>
+    </div>
+  );
+};
+export default Counter;
+```
+
+```js
+import { useState } from "react";
+import Info from "./info";
+
+const App = () => {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div>
+      <button
+        onClick={() => {
+          setVisible(!visible);
+        }}
+      >
+        {visible ? "hide" : "show"}
+      </button>
+      <hr />
+      {visible && <Info />}
+    </div>
+  );
+};
+export default App;
+```
