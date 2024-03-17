@@ -25,15 +25,20 @@
 ```
 
 - js file
+- yarn add classnames
 
 ```js
+import classNames from "classnames/bind";
 import styles from "./CSSModule.module.css";
+
+const cx = classNames.bind(styles);
 
 const CSSModule = () => {
   console.log(styles);
   return (
     //    <div className={`${styles.wrapper} ${styles.inverted}`}>
-    <div className={[styles.wrapper, styles.inverted].join(" ")}>
+    //    <div className={[styles.wrapper, styles.inverted].join(" ")}>
+    <div className={cx("wrapper", "inverted")}>
       Hello, I am <span className="somethings">CSS Module!!!</span>
     </div>
   );
