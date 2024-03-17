@@ -29,7 +29,8 @@
 
 ```js
 import classNames from "classnames/bind";
-import styles from "./CSSModule.module.css";
+// import styles from "./CSSModule.module.css";
+import styles from "./CSSModule.module.scss";
 
 const cx = classNames.bind(styles);
 
@@ -44,4 +45,24 @@ const CSSModule = () => {
   );
 };
 export default CSSModule;
+```
+
+```scss
+.wrapper {
+  background: black;
+  padding: 1rem;
+  color: white;
+  font-size: 2rem;
+  &.inverted {
+    color: orange;
+    background: white;
+    border: 1px solid black;
+  }
+}
+:global {
+  .somethings {
+    font-weight: 800;
+    color: aqua;
+  }
+}
 ```
