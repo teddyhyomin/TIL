@@ -1,9 +1,15 @@
 import TodoTemplate from "./TodoTemplate";
 import TodoInsert from "./TodoInsert";
+import TodoList from "./TodoList";
 
 const App = () => {
-    return <div> Let's create to-do app!!</div>
-}
+    return (
+        <TodoTemplate>
+            <TodoInsert/>
+            <TodoList/>
+        </TodoTemplate>
+    );
+};
 
 export default App;
 
