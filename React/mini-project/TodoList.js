@@ -2,7 +2,8 @@ import TodoListItem from "./TodoListItem";
 import './TodoList.scss';
 
 const TodoList = ({todos, onRemove, onToggle}) => {
-    return (
+    return (...);
+    /*
         <div className="TodoList">
             {todos.map(todo => (
                 <TodoListItem 
@@ -14,6 +15,7 @@ const TodoList = ({todos, onRemove, onToggle}) => {
             ))}
         </div>
     );
+    */
 };
 
 export default TodoList;
