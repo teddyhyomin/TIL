@@ -2,6 +2,7 @@
 
 ```js
 import { useRef, useCallback, useState } from "react";
+import { produce } from "immer";
 
 const App = () => {
   const nextId = useRef(1);
@@ -14,10 +15,16 @@ const App = () => {
   const onChange = useCallback(
     (e) => {
       const { name, value } = e.target;
-      setForm({
+      /*  setForm({
         ...form,
-        [name]: [value],
+        [name]: [value]
       });
+    */
+      setForm(
+        produce(form, (draft) => {
+          draft[name] = value;
+        })
+      );
     },
     [form]
   );
@@ -30,11 +37,16 @@ const App = () => {
         name: form.name,
         username: form.username,
       };
-
-      setData({
+      /*  setData({
         ...data,
-        array: data.array.concat(info),
+        array: data.array.concat(info)
       });
+    */
+      setData(
+        produce(data, (draft) => {
+          draft.array.push(info);
+        })
+      );
 
       setForm({
         name: "",
@@ -47,10 +59,19 @@ const App = () => {
 
   const onRemove = useCallback(
     (id) => {
-      setData({
+      /*   setData({
         ...data,
-        array: data.array.filter((info) => info.id !== id),
+        array: data.array.filter(info => info.id !== id)
       });
+   */
+      setData(
+        produce(data, (draft) => {
+          draft.array.splice(
+            draft.array.findIndex((info) => info.id === id),
+            1
+          );
+        })
+      );
     },
     [data]
   );
@@ -61,7 +82,7 @@ const App = () => {
         <input
           name="username"
           placeholder="ID"
-          value={form.name}
+          value={form.username}
           onChange={onChange}
         />
         <input
