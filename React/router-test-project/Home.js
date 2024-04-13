@@ -18,6 +18,9 @@ const Home = () => {
                 <li>
                     <Link to="/profiles/void"> NOT EXISTED PROFILE </Link>
                 </li>
+                <li>
+                    <Link to="/articles"> Articles List </Link>
+                </li>
             </ul>
         </div>
     );
