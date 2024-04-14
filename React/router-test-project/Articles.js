@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 const Articles = () => {
     return (
+    <div>
+        <Outlet />
         <ul>
             <li>
                 <Link to="/articles/1">ARTICLE 1</Link>
@@ -13,6 +15,7 @@ const Articles = () => {
                 <Link to="/articles/3">ARTICLE 3</Link>
             </li>
         </ul>
+    </div>
     )
 }
 
