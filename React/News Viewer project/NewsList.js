@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import NewsItem from './NewsItem';
+import axios from 'axios';
 
 const NewsListBlock = styled.div`
     box-sizing: border-box;
@@ -14,14 +16,17 @@ const NewsListBlock = styled.div`
     }
 `;
 
+/*
 const sampleArticle = {
     title: 'TITLE',
     description: 'ARTICLE',
     url: 'https://google.com',
     urlToImage: 'https://via.placeholder.com/160',
 };
+*/
 
-const NewsList = () => {
+const NewsList = ({ category }) => {
+    /*
     return (
         <NewsListBlock>
             <NewsItem article={sampleArticle} />
@@ -30,6 +35,42 @@ const NewsList = () => {
             <NewsItem article={sampleArticle} />
             <NewsItem article={sampleArticle} />
             <NewsItem article={sampleArticle} />
+        </NewsListBlock>
+    );
+    */
+   const [articles, setArticles] = useState(null);
+   const [loading, setLoading] = useState(false);
+
+   useEffect(() => {
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const query = category === 'all' ? '' : `&category=${category}`;
+            const response = await axios.get(
+                'https://newsapi.org/v2/top-headlines?country=ca${query}&apiKey=6da932c7c8fe493c8c42475b077a80dd',
+            );
+            setArticles(response.data.articles);
+        } catch (e) {
+            console.log(e);
+        }
+        setLoading(false);
+        };
+        fetchData();
+    }, []);
+
+    if(loading) {
+        return <NewsListBlock> WAITING.... </NewsListBlock>;
+    }
+
+    if (!articles) {
+        return null;
+    }
+
+    return(
+        <NewsListBlock>
+            {articles.map(article => (
+                <NewsItem key={article.url} article={article} />
+            ))}
         </NewsListBlock>
     );
 };
