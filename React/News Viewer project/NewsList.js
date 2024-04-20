@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+//import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import NewsItem from './NewsItem';
 import axios from 'axios';
+import usePromise from '../lib/usePromise';
 
 const NewsListBlock = styled.div`
     box-sizing: border-box;
@@ -38,6 +39,7 @@ const NewsList = ({ category }) => {
         </NewsListBlock>
     );
     */
+   /*
    const [articles, setArticles] = useState(null);
    const [loading, setLoading] = useState(false);
 
@@ -47,7 +49,7 @@ const NewsList = ({ category }) => {
         try {
             const query = category === 'all' ? '' : `&category=${category}`;
             const response = await axios.get(
-                'https://newsapi.org/v2/top-headlines?country=ca${query}&apiKey=',
+                `https://newsapi.org/v2/top-headlines?country=ca${query}&apiKey=6da932c7c8fe493c8c42475b077a80dd`,
             );
             setArticles(response.data.articles);
         } catch (e) {
@@ -56,7 +58,7 @@ const NewsList = ({ category }) => {
         setLoading(false);
         };
         fetchData();
-    }, []);
+    }, [category]);
 
     if(loading) {
         return <NewsListBlock> WAITING.... </NewsListBlock>;
@@ -65,6 +67,27 @@ const NewsList = ({ category }) => {
     if (!articles) {
         return null;
     }
+*/
+    const [loading, response, error] = usePromise(() => {
+        const query = category === 'all' ? '' : `&category=${category}`;
+        return axios.get(
+            `https://newsapi.org/v2/top-headlines?country=ca${query}&apiKey=6da932c7c8fe493c8c42475b077a80dd`,
+        );
+    }, [category]);
+
+    if(loading) {
+        return <NewsListBlock> WAITING ... </NewsListBlock>;
+    }
+
+    if(!response) {
+        return null;
+    }
+
+    if(error) {
+        return <NewsListBlock> ERROR OCCERD!!! </NewsListBlock>;
+    }
+
+    const { articles } = response.data;
 
     return(
         <NewsListBlock>
