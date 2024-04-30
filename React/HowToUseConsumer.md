@@ -134,20 +134,23 @@ const ColorBox = () => {
   return (
     //        <ColorContext.Consumer>
     <ColorConsumer>
-      {(value) => (
+      {/*        {value => (       */}
+      {({ state }) => (
         <>
           <div
             style={{
               width: "64px",
               height: "64px",
-              background: value.state.color,
+              //                   background: value.state.color
+              background: state.subcolor,
             }}
           />
           <div
             style={{
               width: "32px",
               height: "32px",
-              background: value.state.subcolor,
+              //                   background: value.state.subcolor
+              background: state.subcolor,
             }}
           />
         </>
@@ -158,4 +161,34 @@ const ColorBox = () => {
 };
 
 export default ColorBox;
+```
+
+- add select color component
+
+```js
+const colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
+
+const SelectColors = () => {
+  return (
+    <div>
+      <h2> Please choose color. </h2>
+      <div style={{ display: "flex" }}>
+        {colors.map((color) => (
+          <div
+            key={color}
+            style={{
+              background: color,
+              width: "24px",
+              height: "24px",
+              cursor: "pointer",
+            }}
+          />
+        ))}
+      </div>
+      <hr />
+    </div>
+  );
+};
+
+export default SelectColors;
 ```
