@@ -203,3 +203,51 @@ const SelectColors = () => {
 
 export default SelectColors;
 ```
+
+- How to use "useContext" Hook
+
+```js
+//import ColorContext from '../contexts/color';
+import { useContext } from "react";
+import ColorContext, { ColorConsumer } from "../contexts/color";
+
+const ColorBox = () => {
+  const { state } = useContext(ColorContext);
+  return (
+    //        <ColorContext.Consumer>
+    /*        <ColorConsumer>
+        {value => (       
+            {({ state }) => (
+                                                */
+    <>
+      <div
+        style={{
+          width: "64px",
+          height: "64px",
+          //                   background: value.state.color
+          background: state.color,
+        }}
+      />
+      <div
+        style={{
+          width: "32px",
+          height: "32px",
+          //                   background: value.state.subcolor
+          background: state.subcolor,
+        }}
+      />
+    </>
+    //      )}
+    //       </ColorConsumer>
+    //        </ColorContext.Consumer>
+  );
+};
+
+export default ColorBox;
+```
+
+- How to use "static contextType"
+
+```js
+
+```
