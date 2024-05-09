@@ -154,7 +154,7 @@ const counter = handleActions(
 export default counter;
 ```
 
-## modules/todos.js
+### modules/todos.js
 
 ```js
 import { produce } from "immer";
@@ -283,7 +283,7 @@ const todos = handleActions(
 export default todos;
 ```
 
-## modules/index.js
+### modules/index.js
 
 ```js
 import { combineReducers } from "redux";
@@ -296,4 +296,34 @@ const rootReducer = combineReducers({
 });
 
 export default rootReducer;
+```
+
+### src/index.js
+
+```js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import { createStore } from "redux";
+import rootReducer from "./modules";
+import reportWebVitals from "./reportWebVitals";
+import { Provider } from "react-redux";
+import { devToolsEnhancer } from "redux-devtools-extension";
+
+const store = createStore(rootReducer, devToolsEnhancer());
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  /*
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+*/
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+
+reportWebVitals();
 ```
