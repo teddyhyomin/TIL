@@ -327,3 +327,199 @@ root.render(
 
 reportWebVitals();
 ```
+
+### containers/CounterContainer.js
+
+```js
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+//import { connect } from "react-redux";
+import Counter from "../components/Counter";
+import { increase, decrease } from "../modules/counter";
+//import { bindActionCreators } from "redux";
+
+/*
+const CounterContainer = ({ number, increase, decrease }) => {
+    return (
+    <Counter number={number} onIncrease={increase} onDecrease={decrease} />
+    );
+};
+*/
+
+const CounterContainer = () => {
+  const number = useSelector((state) => state.counter.number);
+  //    return <Counter number={number} />;
+  const dispatch = useDispatch();
+  const onIncrease = useCallback(() => dispatch(increase()), [dispatch]);
+  const onDecrease = useCallback(() => dispatch(decrease()), [dispatch]);
+  return (
+    <Counter number={number} onIncrease={onIncrease} onDecrease={onDecrease} />
+    /*        <Counter
+            number={number}
+            onIncrease={() => dispatch(increase())}
+            onDecrease={() => dispatch(decrease())}
+        />
+*/
+  );
+};
+
+/*
+const mapStateToProps = state => ({
+    number: state.counter.number ,
+});
+
+const mapDispatchToProps = dispatch => ({
+    
+    increase: () => {
+        dispatch(increase());
+    },
+    decrease: () => {
+        dispatch(decrease());
+    },
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+*/
+
+/*
+export default connect(
+    state => ({
+        number: state.counter.number ,
+    }),
+    dispatch => ({
+        increase: () => dispatch(increase()),
+        decrease: () => dispatch(decrease()),
+    }),
+*/
+
+/*
+export default connect(
+    state => ({
+        number: state.counter.number ,
+    }),
+    dispatch => 
+        bindActionCreators(
+            {
+                increase,
+                decrease,
+            },
+            dispatch,
+        ),
+ */
+
+/*
+export default connect(
+    state => ({
+        number: state.counter.number ,
+    }),
+    {
+        increase,
+        decrease,
+    },
+)(CounterContainer);
+*/
+
+export default CounterContainer;
+```
+
+### containers/TodosContainer.js
+
+```js
+import React from "react";
+//import { connect } from "react-redux";
+//import { useCallback } from "react";
+import { useSelector } from "react-redux";
+import { changeInput, insert, toggle, remove } from "../modules/todos";
+import Todos from "../components/Todos";
+import useActions from "../lib/useAction";
+/*
+const TodosContainer = ({
+    input,
+    todos,
+    changeInput,
+    insert,
+    toggle,
+    remove,
+}) => {
+    return (
+        <Todos
+            input={input}
+            todos={todos}
+            onChangeInput={changeInput}
+            onInsert={insert}
+            onToggle={toggle}
+            onRemove={remove}
+        />
+    );
+};
+
+export default connect(
+    ({ todos }) => ({
+        input: todos.input,
+        todos: todos.todos,
+    }),
+    {
+        changeInput,
+        insert,
+        toggle,
+        remove,
+    },
+)(TodosContainer);
+*/
+
+const TodosContainer = () => {
+  const { input, todos } = useSelector(({ todos }) => ({
+    input: todos.input,
+    todos: todos.todos,
+  }));
+  /*   
+    const dispatch = useDispatch();
+    const onChangeInput = useCallback(input => dispatch(changeInput(input)), [dispatch]);
+    const onInsert = useCallback(text => dispatch(insert(text)), [dispatch]);
+    const onToggle = useCallback(id => dispatch(toggle(id)), [dispatch]);
+    const onRemove = useCallback(id => dispatch(remove(id)), [dispatch]);
+*/
+
+  const [onChangeInput, onInsert, onToggle, onRemove] = useActions(
+    [changeInput, insert, toggle, remove],
+    []
+  );
+  return (
+    <Todos
+      input={input}
+      todos={todos}
+      onChangeInput={onChangeInput}
+      onInsert={onInsert}
+      onToggle={onToggle}
+      onRemove={onRemove}
+    />
+  );
+};
+
+//export default TodosContainer;
+
+export default React.memo(TodosContainer);
+```
+
+### lib/useActions.js
+
+```js
+import { bindActionCreators } from "redux";
+import { useDispatch } from "react-redux";
+import { useMemo } from "react";
+
+export default function useActions(actions, deps) {
+  const dispatch = useDispatch();
+  return useMemo(
+    () => {
+      if (Array.isArray(actions)) {
+        return actions.map((a) => bindActionCreators(a, dispatch));
+      }
+      return bindActionCreators(actions, dispatch);
+    },
+    deps ? [dispatch, ...deps] : deps
+  );
+}
+```
