@@ -64,3 +64,59 @@ root.render(
   </Provider>
 );
 ```
+
+### components/Counter.js
+
+```js
+const Counter = ({ onIncrease, onDecrease, number }) => {
+  return (
+    <div>
+      <h1>{number}</h1>
+      <button onClick={onIncrease}> +1 </button>
+      <button onClick={onDecrease}> -1 </button>
+    </div>
+  );
+};
+
+export default Counter;
+```
+
+### containers/CountterContainer.js
+
+```js
+import { connect } from "react-redux";
+import { increase, decrease } from "../modules/counter";
+import Counter from "../components/Counter";
+
+const CounterContainer = ({ number, increase, decrease }) => {
+  return (
+    <Counter number={number} onIncrease={increase} onDecrease={decrease} />
+  );
+};
+
+export default connect(
+  (state) => ({
+    number: state.counter,
+  }),
+  {
+    increase,
+    decrease,
+  }
+)(CounterContainer);
+```
+
+### App.js
+
+```js
+import CounterContainer from "./containers/CounterContainer";
+
+const App = () => {
+  return (
+    <div>
+      <CounterContainer />
+    </div>
+  );
+};
+
+export default App;
+```
