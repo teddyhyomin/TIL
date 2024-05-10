@@ -45,20 +45,15 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import rootReducer from "./modules";
 import { Provider } from "react-redux";
+import loggerMiddleware from "./lib/loggerMiddleware";
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(loggerMiddleware));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  /*
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-  */
-
   <Provider store={store}>
     <App />
   </Provider>
@@ -119,4 +114,19 @@ const App = () => {
 };
 
 export default App;
+```
+
+### lib/loggerMiddleware.js
+
+```js
+const loggerMiddleware = (store) => (next) => (action) => {
+  console.group(action && action.type);
+  console.log("PREVIOUS STATUS", store.getState());
+  console.log("ACTION", action);
+  next(action);
+  console.log("NEXT STATUS", store.getState());
+  console.groupEnd();
+};
+
+export default loggerMiddleware;
 ```
