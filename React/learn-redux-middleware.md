@@ -11,6 +11,17 @@ const DECREASE = "counter/DECREASE";
 export const increase = createAction(INCREASE);
 export const decrease = createAction(DECREASE);
 
+export const increaseAsync = () => (dispatch) => {
+  setTimeout(() => {
+    dispatch(increase());
+  }, 1000);
+};
+export const decreaseAsync = () => (dispatch) => {
+  setTimeout(() => {
+    dispatch(decrease());
+  }, 1000);
+};
+
 const initialState = 0;
 
 const counter = handleActions(
@@ -29,9 +40,11 @@ export default counter;
 ```js
 import { combineReducers } from "redux";
 import counter from "./counter";
+import sample from "./sample";
 
 const rootReducer = combineReducers({
   counter,
+  sample,
 });
 
 export default rootReducer;
@@ -81,12 +94,16 @@ export default Counter;
 
 ```js
 import { connect } from "react-redux";
-import { increase, decrease } from "../modules/counter";
+import { increaseAsync, decreaseAsync } from "../modules/counter";
 import Counter from "../components/Counter";
 
-const CounterContainer = ({ number, increase, decrease }) => {
+const CounterContainer = ({ number, increaseAsync, decreaseAsync }) => {
   return (
-    <Counter number={number} onIncrease={increase} onDecrease={decrease} />
+    <Counter
+      number={number}
+      onIncrease={increaseAsync}
+      onDecrease={decreaseAsync}
+    />
   );
 };
 
@@ -95,8 +112,8 @@ export default connect(
     number: state.counter,
   }),
   {
-    increase,
-    decrease,
+    increaseAsync,
+    decreaseAsync,
   }
 )(CounterContainer);
 ```
@@ -130,4 +147,210 @@ const loggerMiddleware = (store) => (next) => (action) => {
 };
 
 export default loggerMiddleware;
+```
+
+### lib/api.js
+
+```js
+import axios from "axios";
+
+export const getPost = (id) =>
+  axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`);
+
+export const getUsers = (id) =>
+  axios.get(`https://jsonplaceholder.typicode.com/users`);
+```
+
+### modules/sample.js
+
+```js
+import { handleActions } from "redux-actions";
+import * as api from "../lib/api";
+
+const GET_POST = "sample/GET_POST";
+const GET_POST_SUCCESS = "sample/GET_POST_SUCCESS";
+const GET_POST_FAILURE = "sample/GET_POST_FAILURE";
+
+const GET_USERS = "sample/GET_USERS";
+const GET_USERS_SUCCESS = "sample/GET_USERS_SUCCESS";
+const GET_USERS_FAILURE = "sample/GET_USERS_FAILURE";
+
+export const getPost = (id) => async (dispatch) => {
+  dispatch({ type: GET_POST });
+  try {
+    const response = await api.getPost(id);
+    dispatch({
+      type: GET_POST_SUCCESS,
+      payload: response.data,
+    });
+  } catch (e) {
+    dispatch({
+      type: GET_POST_FAILURE,
+      payload: e,
+      error: true,
+    });
+    throw e;
+  }
+};
+
+export const getUsers = () => async (dispatch) => {
+  dispatch({ type: GET_USERS });
+  try {
+    const response = await api.getUsers();
+    dispatch({
+      type: GET_USERS_SUCCESS,
+      payload: response.data,
+    });
+  } catch (e) {
+    dispatch({
+      type: GET_USERS_FAILURE,
+      payload: e,
+      error: true,
+    });
+    throw e;
+  }
+};
+
+const initialState = {
+  loading: {
+    GET_POST: false,
+    GET_USERS: false,
+  },
+  post: null,
+  users: null,
+};
+
+const sample = handleActions(
+  {
+    [GET_POST]: (state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        GET_POST: true,
+      },
+    }),
+    [GET_POST_SUCCESS]: (state, action) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        GET_POST: false,
+      },
+      post: action.payload,
+    }),
+    [GET_POST_FAILURE]: (state, action) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        GET_POST: false,
+      },
+    }),
+    [GET_USERS]: (state) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        GET_USERS: true,
+      },
+    }),
+    [GET_USERS_SUCCESS]: (state, action) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        GET_USERS: false,
+      },
+      users: action.payload,
+    }),
+    [GET_USERS_FAILURE]: (state, action) => ({
+      ...state,
+      loading: {
+        ...state.loading,
+        GET_USERS: false,
+      },
+    }),
+  },
+  initialState
+);
+
+export default sample;
+```
+
+### components/Sample.js
+
+```js
+const Sample = ({ loadingPost, loadingUsers, post, users }) => {
+  return (
+    <div>
+      <section>
+        <h1> POST </h1>
+        {loadingPost && "LOADING..."}
+        {!loadingPost && post && (
+          <div>
+            <h3>{post.title}</h3>
+            <h3>{post.body}</h3>
+          </div>
+        )}
+      </section>
+      <hr />
+      <section>
+        <h1> USERS LIST </h1>
+        {loadingUsers && "LOADING..."}
+        {!loadingUsers && users && (
+          <ul>
+            {users.map((user) => (
+              <li key={user.id}>
+                {user.username} ({user.email})
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </div>
+  );
+};
+
+export default Sample;
+```
+
+### containers/SampleContainer.js
+
+```js
+import React from "react";
+import { connect } from "react-redux";
+import Sample from "../components/Sample";
+import { getPost, getUsers } from "../modules/sample";
+
+const { useEffect } = React;
+const SampleContainer = ({
+  getPost,
+  getUsers,
+  post,
+  users,
+  loadingPost,
+  loadingUsers,
+}) => {
+  useEffect(() => {
+    getPost(1);
+    getUsers(1);
+  }, [getPost, getUsers]);
+  return (
+    <Sample
+      post={post}
+      users={users}
+      loadingPost={loadingPost}
+      loadingUsers={loadingUsers}
+    />
+  );
+};
+
+export default connect(
+  ({ sample }) => ({
+    post: sample.post,
+    users: sample.users,
+    loadingPost: sample.loading.GET_POST,
+    loadingUsers: sample.loading.GET_USERS,
+  }),
+  {
+    getPost,
+    getUsers,
+  }
+)(SampleContainer);
 ```
